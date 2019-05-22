@@ -18,10 +18,10 @@ left.servo[2].actuation_range = 130
 right.servo[6].set_pulse_width_range(1600, 2500)
 right.servo[6].actuation_range = 90
 
-right.servo[7].set_pulse_width_range(450, 2400)
+right.servo[7].set_pulse_width_range(1200, 2750) # up, down
 right.servo[7].actuation_range = 180
 
-right.servo[8].set_pulse_width_range(500, 2000)
+right.servo[8].set_pulse_width_range(500, 2000) # up, down
 right.servo[8].actuation_range = 130
 
 # BACK RIGHT
@@ -49,14 +49,14 @@ def frReset():
 	right.servo[7].angle = 135
 	right.servo[8].angle = 90
 
-#  frReset()
+frReset()
 
-servo_to_test = 7
+#  servo_to_test = 8
 
-time.sleep( 2 )
+#  time.sleep( 2 )
 
-right.servo[servo_to_test].angle = 180
+#  right.servo[servo_to_test].angle = 180
 
-time.sleep( 2 )
+#  time.sleep( 2 )
 
-right.servo[servo_to_test].angle = 0
+#  right.servo[servo_to_test].angle = 0
