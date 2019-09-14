@@ -1,172 +1,196 @@
 import time
-from adafruit_servokit import ServoKit
 
-left  = ServoKit(channels=16, address=0x40)
-right = ServoKit(channels=16, address=0x41)
+from board import SCL, SDA
+import busio
 
-front_right = [
-	{
-		"index": 0,
-		"pulse_width_range": [ 1600, 2500 ],
-		"actuation_range":   90,
-	},
-	{
-		"index": 1,
-		"pulse_width_range": [ 1200, 2750 ],
-		"actuation_range":   180,
-	},
-	{
-		"index": 2,
-		"pulse_width_range": [ 500, 2000 ],
-		"actuation_range":   130,
-	},
-]
+# Import the PCA9685 module. Available in the bundle and here:
+#   https://github.com/adafruit/Adafruit_CircuitPython_PCA9685
+from adafruit_pca9685 import PCA9685
+from adafruit_motor import servo
 
-mid_right = [
-	{
-		"index": 3,
-		"pulse_width_range": [ 2200, 2500 ],
-		"actuation_range":   90,
-	},
-	{
-		"index": 4,
-		"pulse_width_range": [ 550, 2500 ],
-		"actuation_range":   180,
-	},
-	{
-		"index": 5,
-		"pulse_width_range": [ 600, 2000 ],
-		"actuation_range":   130,
-	},
-]
+i2c = busio.I2C(SCL, SDA)
 
-back_right = [
-	{
-		"index": 6,
-		"pulse_width_range": [ 550, 1300 ],
-		"actuation_range":   90,
-	},
-	{
-		"index": 7,
-		"pulse_width_range": [ 750, 2500 ],
-		"actuation_range":   180,
-	},
-	{
-		"index": 8,
-		"pulse_width_range": [ 600, 2000 ],
-		"actuation_range":   130,
-	},
-]
+# Create a simple PCA9685 class instance.
+pca = PCA9685(i2c)
+pca.frequency = 50
 
-front_left = [
-	{
-		"index": 15,
-		"pulse_width_range": [ 550, 1300 ],
-		"actuation_range":   90,
-	},
-	{
-		"index": 14,
-		"pulse_width_range": [ 750, 2500 ],
-		"actuation_range":   180,
-	},
-	{
-		"index": 13,
-		"pulse_width_range": [ 600, 2000 ],
-		"actuation_range":   130,
-	},
-]
+#  left  = ServoKit(channels=16, address=0x40)
+#  right = ServoKit(channels=16, address=0x41)
 
-mid_left = [
-	{
-		"index": 12,
-		"pulse_width_range": [ 550, 1300 ],
-		"actuation_range":   90,
-	},
-	{
-		"index": 11,
-		"pulse_width_range": [ 750, 2500 ],
-		"actuation_range":   180,
-	},
-	{
-		"index": 10,
-		"pulse_width_range": [ 600, 2000 ],
-		"actuation_range":   130,
-	},
-]
+#  front_right = [
+	#  {
+		#  # Lower is backward
+		#  "is_calibrated":     True,
+		#  "index":             0,
+		#  "pulse_width_range": [ 1600, 2500 ],
+		#  "actuation_range":   90,
+		#  "resting":           60,
+	#  },
+	#  {
+		#  # Lower is downward
+		#  "is_calibrated":     True,
+		#  "index":             1,
+		#  "pulse_width_range": [ 450, 2000 ],
+		#  "actuation_range":   130,
+		#  "resting":           0,
+	#  },
+	#  {
+		#  # Lower is outward
+		#  "is_calibrated":     True,
+		#  "index":             2,
+		#  "pulse_width_range": [ 500, 2000 ],
+		#  "actuation_range":   130,
+		#  "resting":           30,
+	#  },
+#  ]
 
-back_left = [
-	{
-		"index": 9,
-		"pulse_width_range": [ 1600, 2500 ],
-		"actuation_range":   90,
-	},
-	{
-		"index": 8,
-		"pulse_width_range": [ 1200, 2750 ],
-		"actuation_range":   180,
-	},
-	{
-		"index": 7,
-		"pulse_width_range": [ 500, 2000 ],
-		"actuation_range":   130,
-	},
-]
+#  mid_right = [
+	#  {
+		#  "is_calibrated":     False,
+		#  "index": 3,
+		#  "pulse_width_range": [ 1800, 2000 ],
+		#  "actuation_range":   90,
+		#  "resting":           45,
+	#  },
+	#  {
+		#  "is_calibrated":     False,
+		#  "index": 4,
+		#  "pulse_width_range": [ 550, 2500 ],
+		#  "actuation_range":   130,
+		#  "resting":           0,
+	#  },
+	#  {
+		#  "is_calibrated":     False,
+		#  "index": 5,
+		#  "pulse_width_range": [ 500, 2000 ],
+		#  "actuation_range":   130,
+		#  "resting":           30,
+	#  },
+#  ]
 
-legs_right = [
-	front_right,
-	mid_right,
-	back_right,
-]
+#  back_right = [
+	#  {
+		#  "is_calibrated":     False,
+		#  "index": 6,
+		#  "pulse_width_range": [ 550, 1300 ],
+		#  "actuation_range":   90,
+	#  },
+	#  {
+		#  "is_calibrated":     False,
+		#  "index": 7,
+		#  "pulse_width_range": [ 750, 2500 ],
+		#  "actuation_range":   180,
+	#  },
+	#  {
+		#  "is_calibrated":     False,
+		#  "index": 8,
+		#  "pulse_width_range": [ 600, 2000 ],
+		#  "actuation_range":   130,
+	#  },
+#  ]
 
-legs_left = [
-	front_left,
-	mid_left,
-	back_left,
-]
+#  front_left = [
+	#  {
+		#  "is_calibrated":     False,
+		#  "index": 15,
+		#  "pulse_width_range": [ 550, 1300 ],
+		#  "actuation_range":   90,
+	#  },
+	#  {
+		#  "is_calibrated":     False,
+		#  "index": 14,
+		#  "pulse_width_range": [ 750, 2500 ],
+		#  "actuation_range":   180,
+	#  },
+	#  {
+		#  "is_calibrated":     False,
+		#  "index": 13,
+		#  "pulse_width_range": [ 600, 2000 ],
+		#  "actuation_range":   130,
+	#  },
+#  ]
 
-for joints in legs_right:
-	for joint in joints:
-		right.servo[joint["index"]].set_pulse_width_range(*joint["pulse_width_range"])
-		right.servo[joint["index"]].actuation_range = joint["actuation_range"]
+#  mid_left = [
+	#  {
+		#  "is_calibrated":     False,
+		#  "index": 12,
+		#  "pulse_width_range": [ 550, 1300 ],
+		#  "actuation_range":   90,
+	#  },
+	#  {
+		#  "is_calibrated":     False,
+		#  "index": 11,
+		#  "pulse_width_range": [ 750, 2500 ],
+		#  "actuation_range":   180,
+	#  },
+	#  {
+		#  "is_calibrated":     False,
+		#  "index": 10,
+		#  "pulse_width_range": [ 600, 2000 ],
+		#  "actuation_range":   130,
+	#  },
+#  ]
 
-for joints in legs_left:
-	for joint in joints:
-		left.servo[joint["index"]].set_pulse_width_range(*joint["pulse_width_range"])
-		left.servo[joint["index"]].actuation_range = joint["actuation_range"]
+#  back_left = [
+	#  {
+		#  "is_calibrated":     False,
+		#  "index": 9,
+		#  "pulse_width_range": [ 1600, 2500 ],
+		#  "actuation_range":   90,
+	#  },
+	#  {
+		#  "is_calibrated":     False,
+		#  "index": 8,
+		#  "pulse_width_range": [ 1200, 2750 ],
+		#  "actuation_range":   180,
+	#  },
+	#  {
+		#  "is_calibrated":     False,
+		#  "index": 7,
+		#  "pulse_width_range": [ 500, 2000 ],
+		#  "actuation_range":   130,
+	#  },
+#  ]
 
-# BACK LEFT
-left.servo[6].set_pulse_width_range(1500, 2700)
-left.servo[6].actuation_range = 100
+#  legs_right = [
+	#  front_right,
+	#  mid_right,
+	#  back_right,
+#  ]
 
-left.servo[7].set_pulse_width_range(450, 2400)
-left.servo[7].actuation_range = 180
+#  legs_left = [
+	#  front_left,
+	#  mid_left,
+	#  front_left,
+#  ]
 
-left.servo[8].set_pulse_width_range(500, 2000)
-left.servo[8].actuation_range = 130
+#  for joints in legs_right:
+	#  for joint in joints:
+		#  right.servo[joint["index"]].set_pulse_width_range(*joint["pulse_width_range"])
+		#  right.servo[joint["index"]].actuation_range = joint["actuation_range"]
 
-def blReset():
-	left.servo[0].angle = 45
-	left.servo[1].angle = 45
-	left.servo[2].angle = 90
+#  for joints in legs_left:
+	#  for joint in joints:
+		#  left.servo[joint["index"]].set_pulse_width_range(*joint["pulse_width_range"])
+		#  left.servo[joint["index"]].actuation_range = joint["actuation_range"]
 
-def brReset():
-	right.servo[0].angle = 45
-	right.servo[1].angle = 135
-	right.servo[2].angle = 90
+#  def reset_leg(side, leg):
+	#  for servo in leg:
+		#  side.servo[servo["index"]].angle = servo["resting"]
+		#  time.sleep( 2 )
 
-def frReset():
-	right.servo[6].angle = 45
-	right.servo[7].angle = 135
-	right.servo[8].angle = 90
+#  #  reset_leg(right, front_right)
+#  leg_to_test = front_right
 
-#  frReset()
+#  for servo in leg_to_test:
+	#  right.servo[servo["index"]].angle = None
+	#  #  if servo["is_calibrated"]:
+		#  #  continue
 
-servo_to_test = 0
+	#  #  time.sleep( 2 )
 
-time.sleep( 2 )
+	#  #  right.servo[servo["index"]].angle = servo["actuation_range"]
 
-right.servo[servo_to_test].angle = 90
+	#  #  time.sleep( 2 )
 
-time.sleep( 2 )
-
-right.servo[servo_to_test].angle = 0
+	#  #  right.servo[servo["index"]].angle = 0
