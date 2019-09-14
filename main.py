@@ -78,64 +78,73 @@ back_right = [
 
 front_left = [
 	{
-		"is_calibrated":     False,
+		"is_calibrated":     True,
 		"index": 15,
-		"pulse_width_range": [ 550, 1300 ],
+		"pulse_width_range": [ 550, 1350 ], # first is forward
 		"actuation_range":   90,
+		"resting":           45,
 	},
 	{
-		"is_calibrated":     False,
+		"is_calibrated":     True,
 		"index": 14,
-		"pulse_width_range": [ 750, 2000 ],
-		"actuation_range":   180,
+		"pulse_width_range": [ 900, 2380 ], # first is upward
+		"actuation_range":   130,
+		"resting":           130,
 	},
 	{
-		"is_calibrated":     False,
+		"is_calibrated":     True,
 		"index": 13,
-		"pulse_width_range": [ 600, 2000 ],
+		"pulse_width_range": [ 1100, 2650 ], # first is outward
 		"actuation_range":   130,
+		"resting":           90,
 	},
 ]
 
 mid_left = [
 	{
-		"is_calibrated":     False,
+		"is_calibrated":     True,
 		"index": 12,
-		"pulse_width_range": [ 550, 1300 ],
+		"pulse_width_range": [ 1300, 1900 ],
 		"actuation_range":   90,
+		"resting":           45,
 	},
 	{
-		"is_calibrated":     False,
+		"is_calibrated":     True,
 		"index": 11,
-		"pulse_width_range": [ 750, 2500 ],
-		"actuation_range":   180,
+		"pulse_width_range": [ 900, 2550 ], # first is upward
+		"actuation_range":   130,
+		"resting":           130,
 	},
 	{
-		"is_calibrated":     False,
+		"is_calibrated":     True,
 		"index": 10,
-		"pulse_width_range": [ 600, 2000 ],
+		"pulse_width_range": [ 1000, 2650 ],
 		"actuation_range":   130,
+		"resting":           90,
 	},
 ]
 
 back_left = [
 	{
-		"is_calibrated":     False,
+		"is_calibrated":     True,
 		"index": 9,
-		"pulse_width_range": [ 1600, 2500 ],
+		"pulse_width_range": [ 1580, 2500 ],
 		"actuation_range":   90,
+		"resting":           60,
 	},
 	{
-		"is_calibrated":     False,
+		"is_calibrated":     True,
 		"index": 8,
-		"pulse_width_range": [ 1200, 2750 ],
-		"actuation_range":   180,
+		"pulse_width_range": [ 1200, 2730 ], # first is upward
+		"actuation_range":   130,
+		"resting":           130,
 	},
 	{
-		"is_calibrated":     False,
+		"is_calibrated":     True,
 		"index": 7,
-		"pulse_width_range": [ 500, 2000 ],
+		"pulse_width_range": [ 1200, 2650 ],
 		"actuation_range":   130,
+		"resting":           90,
 	},
 ]
 
@@ -148,7 +157,7 @@ legs_right = [
 legs_left = [
 	front_left,
 	mid_left,
-	front_left,
+	back_left,
 ]
 
 for joints in legs_right:
@@ -167,28 +176,46 @@ def reset_leg(side, leg):
 
 def disable_leg(side, leg):
 	for servo in leg:
-		right.servo[servo["index"]].angle = None
+		side.servo[servo["index"]].angle = None
 
-#  leg_to_test = back_right
+leg_to_test = back_left
 
-#  for servo in leg_to_test:
-	#  if servo["is_calibrated"]:
-		#  continue
+#  disable_leg(left, leg_to_test)
+#  time.sleep(1)
 
-	#  right.servo[servo["index"]].angle = servo["actuation_range"]
+for servo in leg_to_test:
+	if servo["is_calibrated"]:
+		continue
 
-	#  time.sleep( 2 )
+	left.servo[servo["index"]].angle = servo["actuation_range"]
+	print(servo["actuation_range"])
 
-	#  right.servo[servo["index"]].angle = 0
+	time.sleep( 2 )
 
-	#  time.sleep( 2 )
+	left.servo[servo["index"]].angle = 0
+	print(0)
 
-	#  right.servo[servo["index"]].angle = None
+	time.sleep( 2 )
 
-for leg in legs_right:
-	reset_leg(right, leg)
+	left.servo[servo["index"]].angle = servo["resting"]
 
-time.sleep( 1 )
+	time.sleep( 2 )
 
-for leg in legs_right:
-	disable_leg(right, leg)
+	left.servo[servo["index"]].angle = None
+
+	time.sleep( 1 )
+	#  reset_leg(left, leg_to_test)
+
+	#  time.sleep( 1 )
+
+	#  disable_leg(left, leg_to_test)
+
+	#  time.sleep( 1 )
+
+#  for leg in legs_right:
+	#  reset_leg(right, leg)
+
+#  time.sleep( 1 )
+
+#  for leg in legs_right:
+	#  disable_leg(right, leg)
