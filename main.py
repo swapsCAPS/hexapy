@@ -159,3 +159,5 @@ back_left  = Leg(left, **back_left_config)
 
 # TODO state for each joint
 # TODO Slow move
+
+mid_right.ankle.sweep()
