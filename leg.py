@@ -4,6 +4,10 @@ class Joint:
 	def __init__(self, side, is_calibrated, index, pulse_width_range, actuation_range, resting):
 		self.side = side
 
+		print(index)
+		print(pulse_width_range)
+		print(actuation_range)
+		print(resting)
 		self.servo = self.side.servo[index]
 
 		self.servo.set_pulse_width_range(*pulse_width_range)
@@ -32,19 +36,22 @@ class Joint:
 
 		for i in range(angle, actuation_range):
 			self.servo.angle = i
-			print(self.servo.angle)
+			print(i)
 			time.sleep(0.03)
 		for i in range(actuation_range, angle, -1):
 			self.servo.angle = i
-			print(self.servo.angle)
+			print(i)
 			time.sleep(0.03)
 
 class Leg:
 	def __init__(self, side, pelvis, knee, ankle):
 		self.side = side
 
+		print('creating pelvis', pelvis)
 		self.pelvis = Joint(side, **pelvis)
+		print('creating knee  ', knee)
 		self.knee   = Joint(side, **knee)
+		print('creating ankle ', ankle)
 		self.ankle  = Joint(side, **ankle)
 
 		self.joints = [
@@ -53,12 +60,12 @@ class Leg:
 			self.ankle,
 		]
 
-	def reset_leg(self):
-		for joint in joints:
+	def set_resting_pose(self):
+		for joint in self.joints:
 			joint.set_resting_pose()
 
-	def disable_leg(self):
-		for joint in joints:
+	def disable(self):
+		for joint in self.joints:
 			joint.disable()
 
 

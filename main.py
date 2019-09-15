@@ -149,15 +149,24 @@ back_left_config = {
 	}
 }
 
+print('front_right')
 front_right = Leg(right, **front_right_config)
+print('mid_right')
 mid_right   = Leg(right, **mid_right_config)
+print('back_right')
 back_right  = Leg(right, **back_right_config)
 
+print('front_left')
 front_left = Leg(left, **front_left_config)
+print('mid_left')
 mid_left   = Leg(left, **mid_left_config)
+print('back_left')
 back_left  = Leg(left, **back_left_config)
 
 # TODO state for each joint
 # TODO Slow move
 
-mid_right.ankle.sweep()
+time.sleep(1)
+
+mid_right.set_resting_pose()
+time.sleep(1)
